@@ -1,0 +1,11 @@
+---
+- name: Show interfaces
+  hosts: vyos1
+  gather_facts: false
+#  validate_certs: no
+
+  tasks:
+    - script: ./vyos_conf.sh
+      register: sh_result
+    - debug: var=sh_result.stdout_lines
+

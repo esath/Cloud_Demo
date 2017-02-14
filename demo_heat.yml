@@ -1,0 +1,258 @@
+heat_template_version: 2013-05-23
+
+description: >
+  Template to create a new networks and router to the public
+  network, and for deploying two servers into the inner network. The template also
+  could assign floating IP addresses to each server so they are routable from the
+  public network.
+
+#################################################
+# You have to change these two first parameters #
+#################################################
+
+parameters:
+
+########
+
+  public_net:
+    type: string
+    description: ID or name of public network
+    default: ext-net
+
+  router_dn_address:
+    type: string
+    description: Datanet-side ip-address of router-interface. Admin gives this!!
+    default: 192.168.92.251
+
+
+#####################
+
+  image:
+    type: string
+    description: Name of image to use for servers
+    default: VYOS_1.1.7
+
+  flavor:
+    type: string
+    description: Flavor to use for servers
+    default: sonera.linux.small
+
+  router_address:
+    type: string
+    description: Client-side ip-address of router-interface
+    default: 192.168.91.254
+
+##########################
+  private_net_name:
+    type: string
+    description: Name of private network for customer
+    default: CLOUDY_EXTERNAL
+  private_net_cidr:
+    type: string
+    description: Private network address (CIDR notation)
+    default: 192.168.91.0/24
+  private_net_gateway:
+    type: string
+    description: Private network gateway address
+    default: 192.168.91.1
+  private_net_pool_start:
+    type: string
+    description: Start of private network IP address allocation pool
+    default: 192.168.91.200
+  private_net_pool_end:
+    type: string
+    description: End of private network IP address allocation pool
+    default: 192.168.91.254
+
+########################
+  private_net2_name:
+    type: string
+    description: Name of private network connected to Datanet
+    default: CLOUDY_INTERNAL
+  private_net2_cidr:
+    type: string
+    description: Private network address (CIDR notation)
+    default: 192.168.92.0/24
+  private_net2_gateway:
+    type: string
+    description: Private network gateway address
+    default: 192.168.92.1
+  private_net2_pool_start:
+    type: string
+    description: Start of private network IP address allocation pool
+    default: 192.168.92.200
+  private_net2_pool_end:
+    type: string
+    description: End of private network IP address allocation pool
+    default: 192.168.92.250
+
+#
+######################
+#
+resources:
+
+  private_net:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: private_net_name }
+
+  private_subnet:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: private_net }
+      cidr: { get_param: private_net_cidr }
+      gateway_ip: { get_param: private_net_gateway }
+      dns_nameservers: [ '193.210.18.18', '193.210.19.190' ]
+      allocation_pools:
+        - start: { get_param: private_net_pool_start }
+          end: { get_param: private_net_pool_end }
+
+########################
+
+  private_net2:
+    type: OS::Neutron::Net
+    properties:
+      name: { get_param: private_net2_name }
+
+  private_subnet2:
+    type: OS::Neutron::Subnet
+    properties:
+      network_id: { get_resource: private_net2 }
+      cidr: { get_param: private_net2_cidr }
+      gateway_ip: { get_param: router_dn_address }
+#      gateway_ip: { get_param: private_net2_gateway }
+      allocation_pools:
+        - start: { get_param: private_net2_pool_start }
+          end: { get_param: private_net2_pool_end }
+
+######################
+
+  heat_router_01:
+    type: OS::Neutron::Router
+    properties:
+      external_gateway_info: { network: { get_param: public_net } }
+
+  heat_router_int0:
+    type: OS::Neutron::RouterInterface
+    properties:
+      router_id: { get_resource: heat_router_01 }
+      subnet_id: { get_resource: private_subnet }
+
+##########################
+
+
+  server_security_group:
+    type: OS::Neutron::SecurityGroup
+    properties:
+      name: web_server_security_group
+      rules:
+        - protocol: tcp
+          port_range_min: 80
+          port_range_max: 80
+        - protocol: tcp
+          port_range_min: 443
+          port_range_max: 443
+        - protocol: icmp
+        - protocol: tcp
+          port_range_min: 22
+          port_range_max: 22
+
+##########################
+
+  server1:
+    type: OS::Nova::Server
+    properties:
+      name: Router92
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+#      security_groups:
+#        - { get_resource: server_security_group }
+      networks:
+        - port: { get_resource: server1_port }
+        - port: { get_resource: server1_port2 }
+
+#      user_data_format: RAW
+#      user_data:
+#        str_replace:
+#          template: |
+#            #!/vbin/bash
+#            source /opt/vyatta/etc/functions/script-template
+#            set interfaces ethernet eth1 address $ADDR1 /32
+#          params:
+#            $ADDR1: {get_param: router_dn_address }
+
+
+  server1_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      allowed_address_pairs:
+        - ip_address: 0.0.0.0/0
+      fixed_ips:
+        - ip_address: { get_param: router_address }
+
+  server1_port2:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net2 }
+      allowed_address_pairs:
+        - ip_address: 0.0.0.0/0
+      fixed_ips:
+        - ip_address: { get_param: router_dn_address }
+
+
+
+  server1_floating_ip:
+    type: OS::Neutron::FloatingIP
+    properties:
+      floating_network: { get_param: public_net }
+      port_id: { get_resource: server1_port }
+
+##########################
+
+  server2:
+    type: OS::Nova::Server
+    properties:
+      name: Server2
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+      networks:
+        - port: { get_resource: server2_port2 }
+
+  server2_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet }
+
+  server2_port2:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net2 }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet2 }
+
+#  server2_floating_ip:
+#    type: OS::Neutron::FloatingIP
+#    properties:
+#      floating_network: { get_param: public_net }
+#      port_id: { get_resource: server2_port }
+
+  server3:
+    type: OS::Nova::Server
+    properties:
+      name: Server3
+      image: { get_param: image }
+      flavor: { get_param: flavor }
+      networks:
+        - port: { get_resource: server3_port }
+
+  server3_port:
+    type: OS::Neutron::Port
+    properties:
+      network_id: { get_resource: private_net2 }
+      fixed_ips:
+        - subnet_id: { get_resource: private_subnet2 }
+
+
