@@ -9,9 +9,9 @@
 
   vars:
     image: cirros-0.3.4
-    servername: Ciro2
+    servername: Cirros1
     network: CLOUDY_INTERNAL
-    keyname: EsaH_2048
+    keyname: Your_Keyname_Here
     flavor: sonera.linux.tiny
     security_groups: default
 
@@ -20,7 +20,7 @@
       # assume RC file has already been sourced
       os_auth:
 
-    - name: Launch web instances
+    - name: Launch instance
       os_server:
         name: "{{ servername }}"
         flavor: "{{ flavor }}"
