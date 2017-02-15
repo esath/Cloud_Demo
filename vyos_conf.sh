@@ -17,6 +17,14 @@ set nat destination rule 101 protocol 'tcp'
 set nat destination rule 101 translation address '192.168.92.203'
 set nat destination rule 101 translation port '22'
 #
+set nat destination rule 101 description 'Forward_incoming_http_to_web-_Server'
+set nat destination rule 101 destination port '80'
+set nat destination rule 101 inbound-interface 'eth0'
+set nat destination rule 101 protocol 'tcp'
+set nat destination rule 101 translation address '192.168.92.205'
+set nat destination rule 101 translation port '80'
+#
+
 set nat source rule 1 description 'NAT_all_outgoing_Traffic'
 set nat source rule 1 destination address '0.0.0.0/0'
 set nat source rule 1 outbound-interface 'eth0'

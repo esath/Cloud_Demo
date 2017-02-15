@@ -24,9 +24,11 @@ parameters:
     description: Datanet-side ip-address of router-interface. Admin gives this!!
     default: 192.168.92.251
 
+  server_image:
+    type: string
+    default: Centos7
 
-#####################
-
+# Router-image:
   image:
     type: string
     description: Name of image to use for servers

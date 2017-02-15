@@ -1,0 +1,47 @@
+- hosts: webservers
+  remote_user: ec2-user
+  become: yes
+
+  roles:
+    - {role: ansible-role-resolv, resolv_nameservers: ['62.71.0.190', '62.71.0.191']}
+    - ansible-role-repo-epel
+
+  tasks:
+
+    - name: Install list of packages
+      yum: name={{item}} state=installed
+      with_items:
+           - nano
+           - nginx
+           - quagga
+
+    - name: Enable ip-routing
+      shell: "{{item}}"
+      with_items:
+           - echo "net.ipv4.conf.all.forwarding=1" | sudo tee -a /etc/sysctl.conf
+           - echo "net.ipv4.conf.default.forwarding=1" | sudo tee -a /etc/sysctl.conf          
+
+#    - name: Transfer OSPFD.CONF
+#      copy: src=ospfd.conf dest=/etc/quagga
+#    - name: Transfer ZEBRA.CONF
+#      copy: src=zebra.conf dest=/etc/quagga
+
+    - name: Run commands
+      shell: "{{item}}"
+      with_items:
+           - service nginx start
+           - systemctl enable nginx
+           - systemctl enable ospfd
+           - systemctl enable zebra
+           - sysctl -p
+           - setsebool -P zebra_write_config 1
+           - chown quagga:quagga /etc/quagga/*
+
+#    - service:
+#        name: zebra
+#        state: started
+#    - service:
+#        name: ospfd
+#        state: started
+
+

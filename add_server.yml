@@ -1,0 +1,32 @@
+---
+
+##############################################################################
+# Play - Create instance in Openstack
+##############################################################################
+
+- name: Deploy cloud instance in OpenStack
+  hosts: localhost
+
+  vars:
+    image: cirros-0.3.4
+    servername: Ciro2
+    network: CLOUDY_INTERNAL
+    keyname: EsaH_2048
+    flavor: sonera.linux.tiny
+    security_groups: default
+
+  tasks:
+    - name: Connect to the Cloud
+      # assume RC file has already been sourced
+      os_auth:
+
+    - name: Launch web instances
+      os_server:
+        name: "{{ servername }}"
+        flavor: "{{ flavor }}"
+        image: "{{ image }}"
+        key_name: "{{ keyname }}"
+        state: absent
+        network: "{{ network }}"
+        security_groups: "{{ security_groups }}"
+        auto_ip: no
