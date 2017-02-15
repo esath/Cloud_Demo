@@ -10,6 +10,10 @@ localhost ansible_connection=local
 10.18.122.170 ansible_user=ec2-user
 10.18.122.171 ansible_user=ec2-user
 
+[demo_servers]
+server3 ansible_host=10.18.122.174 ansible_port=222 ansible_ssh_pass=tsfcloud ansible_user=vyos
+server2 ansible_host=10.18.122.174 ansible_port=223 ansible_ssh_pass=tsfcloud ansible_user=vyos
+
 [vyos1:vars]
 ansible_user=vyos
 ansible_ssh_pwd=tsfcloud
