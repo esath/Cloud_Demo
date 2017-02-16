@@ -8,11 +8,10 @@
   hosts: localhost
 
   vars:
-    image: Centos7
-   #image: centos-7
+    image: centos-7
     servername: Centt1
     network: CLOUDY_INTERNAL
-    keyname: your_key_here
+    keyname: EsaH_2048
     flavor: sonera.linux.tiny
     security_groups: default
 
