@@ -1,4 +1,4 @@
-./temp/*
-./prod_env/*
+/temp/*
+/prod_env/*
 *.retry
 
