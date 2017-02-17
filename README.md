@@ -4,7 +4,6 @@
 3. Do ansible_run to configure router (change 'vyos1' floating ip to hosts -file first)
    ansible-playbook vyos_conf.yml
 4. Check connectivity to router ssh vyos@router-floating-ip
--
 5. Modify and run add_server.yml to add more servers:
    ansible-playbook add_server.yml
 
