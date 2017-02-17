@@ -10,10 +10,10 @@
   vars:
     image: Centos7
    #image: centos-7
-    servername: Centt1
+    servername: Centt0
     network: CLOUDY_INTERNAL
     keyname: EsaH_2048
-    flavor: sonera.linux.tiny
+    flavor: sonera.linux.small
     security_groups: default
 
   tasks:
