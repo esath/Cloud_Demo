@@ -17,12 +17,12 @@
            - tcpdump
 
 # Test-line to run Jenkins automation:
-# gddgfrhgrth6uygdwejk
+# gssdgfrhgrth6uygdwejk
 
-    - name: Run commands
-      shell: "{{item}}"
-      with_items:
-           - service nginx start
+#    - name: Run commands
+#      shell: "{{item}}"
+#      with_items:
+#           - service nginx start
 
 #    - service:
 #        name: ospfd
