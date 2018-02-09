@@ -23,6 +23,8 @@
       with_items:
            - "{{ cmd_to_run }}"
 
+      when: cmd_to_run is defined
+
 #    - service:
 #        name: ospfd
 #        state: started
