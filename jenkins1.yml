@@ -1,0 +1,25 @@
+- hosts: jenkins
+  remote_user: centos
+  become: yes
+
+  roles:
+#    - {role: ansible-role-resolv, resolv_nameservers: ['62.71.0.190', '62.71.0.191']}
+    - ansible-role-repo-epel
+
+  tasks:
+
+    - name: Install list of packages
+      yum: name={{item}} state=installed
+      with_items:
+           - nano
+
+#    - name: Run commands
+#      shell: "{{item}}"
+#      with_items:
+#           - service nginx start
+
+#    - service:
+#        name: ospfd
+#        state: started
+
+
