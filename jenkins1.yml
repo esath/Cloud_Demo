@@ -16,6 +16,9 @@
            - nano
            - tcpdump
 
+# Test-line to run Jenkins automation:
+# ghfu76uygdwejk
+
 #    - name: Run commands
 #      shell: "{{item}}"
 #      with_items:
