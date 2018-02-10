@@ -13,7 +13,7 @@
       yum: name={{item}} state=installed
       with_items:
            - "{{ yum_package }}"
-      when: yum_package is defined
+      when: yum_package != 'none' and yum_package is defined
 
 # Test-line to run Jenkins automation:
 # gssdgfrhgrth6uygdwejk
@@ -23,7 +23,7 @@
       with_items:
            - "{{ cmd_to_run }}"
 
-      when: cmd_to_run is defined
+      when: cmd_to_run != 'none' and cmd_to_run is defined
 
 #    - service:
 #        name: ospfd
