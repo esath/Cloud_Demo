@@ -13,6 +13,9 @@ jenkins1 ansible_host=192.168.112.126 ansible_user=centos ansible_ssh_private_ke
 #10.18.122.170 ansible_user=centos
 centt0 ansible_host=10.18.122.174 ansible_port=224 ansible_user=centos ansible_ssh_private_key_file=~/.ssh/EsaH_2048.key
 
+[routers]
+csr3
+
 ##
 
 [demo_servers]
