@@ -1,0 +1,29 @@
+---
+
+hostname: csr1
+domain_name: local
+
+loopback:
+  address: 172.16.16.1
+  mask: 255.255.255.255
+
+interfaces:
+  1:
+    alias: connection GE1
+    address: 192.168.43.101
+    mask: 255.255.255.0
+
+  2:
+    alias: connection GE2
+    address: 192.168.11.1
+    mask: 255.255.255.0
+
+bgp:
+  asn: 65501
+  neighbor:
+    - {address: 192.168.164.1, remote_as: 65502}
+    - {address: 10.0.255.6, remote_as: 65000}
+  networks:
+    - {network: 192.168.43.0, mask: 255.255.255.0}
+    - {network: 192.168.11.0, mask: 255.255.255.0}
+  maxpath: 2

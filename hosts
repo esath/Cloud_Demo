@@ -15,7 +15,7 @@ centt0 ansible_host=10.118.112.174 ansible_port=224 ansible_user=centos ansible_
 
 [routers]
 csr1 ansible_host=192.168.43.101 ansible_user=cisco ansible_ssh_pass=cisco
-csr2 ansible_host=192.168.43.101 ansible_user=cisco
+csr2 ansible_host=192.168.43.102 ansible_user=cisco ansible_ssh_pass=cisco
 csr3
 
 ##
