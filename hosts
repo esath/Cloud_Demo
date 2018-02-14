@@ -1,5 +1,5 @@
 [localhost]
-localhost ansible_connection=local
+127.0.0.1 ansible_connection=local
 
 [vyos1]
 #Your router
@@ -11,15 +11,17 @@ jenkins1 ansible_host=192.168.112.126 ansible_user=centos ansible_ssh_private_ke
 [webservers]
 #If Centos-servers are used
 #10.18.122.170 ansible_user=centos
-centt0 ansible_host=10.18.122.174 ansible_port=224 ansible_user=centos ansible_ssh_private_key_file=~/.ssh/EsaH_2048.key
+centt0 ansible_host=10.118.112.174 ansible_port=224 ansible_user=centos ansible_ssh_private_key_file=~/.ssh/EsaH_2048.key
 
 [routers]
+csr1 ansible_host=192.168.43.101 ansible_user=cisco ansible_ssh_pass=cisco
+csr2 ansible_host=192.168.43.101 ansible_user=cisco
 csr3
 
 ##
 
 [demo_servers]
-server3 ansible_host=10.18.122.170 ansible_port=222 ansible_ssh_pass=tsfcloud ansible_user=vyos
+server3 ansible_host=10.118.112.170 ansible_port=222 ansible_ssh_pass=xgscloud ansible_user=vyos
 
 #[vyos1:vars]
 #ansible_user=vyos
