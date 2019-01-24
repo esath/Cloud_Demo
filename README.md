@@ -27,8 +27,6 @@
  antispoof.sh		Script to disable antispoof for routers or other. See from file howto use.
 
 
-DEMO-video:
-https://dreambroker.com/channel/dzlgjqqt/xd9t9bz0
 
 GIT:
 https://github.com/esath/Cloud_Demo
