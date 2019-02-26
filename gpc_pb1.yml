@@ -1,0 +1,29 @@
+#usage:
+#ansible-playbook gpc_pb1.yml -e "project=yourprojectname"
+
+---
+
+- name: Create IP address
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  become: yes
+
+  vars:
+    service_account_file: /myaccount.json
+#    project: {{ gpc_project }}
+    auth_kind: serviceaccount
+    scopes:
+      - www.googleapis.com/auth/compute
+
+  tasks:
+
+   - name: Allocate an IP Address
+     gcp_compute_address:
+         state: present
+         name: 'test-address1'
+         region: 'europe-north1-a '
+         project: "{{ project }}"
+         auth_kind: "{{ auth_kind }}"
+         service_account_file: "{{ service_account_file }}"
+         scopes: "{{ scopes }}"

@@ -1,0 +1,7 @@
+plugin: gcp_compute
+projects:
+  - google.com:{{ gproject_name }}
+filters:
+auth_kind: serviceaccount
+service_account_file: /home/alexstephen/my_account.json
+
